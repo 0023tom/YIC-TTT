@@ -68,6 +68,11 @@ ollama pull deepseek-r1:1.5b
 ```
 This may take a few minutes depending on your connection speed.
 
+You may try run the model:
+```bash
+ollama run deepseek-r1:1.5b
+```
+
 ### 5. 🔌 Integrating Arduino with Flask
 Build Your Arduino Board
 
