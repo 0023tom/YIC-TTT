@@ -45,7 +45,7 @@ Install Ollana by running:
 
 **macOS/Linux:**
 ```bash
-curl -fsSL https://ollama.com/install.sh | sh #for 
+curl -fsSL https://ollama.com/install.sh | sh
 ```
 
 **Windows:**
