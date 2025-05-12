@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Crack The Keyword</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #46178f;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    h1 {
+      margin-top: 20px;
+      font-size: 2em;
+      text-align: center;
+    }
+
+    .question-box {
+      background: #ffffff22;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      width: 90%;
+      max-width: 700px;
+      margin-top: 20px;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .option-btn {
+      padding: 15px;
+      font-size: 1em;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .option-btn:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+
+    .red { background-color: #e63946; }
+    .blue { background-color: #457b9d; }
+    .green { background-color: #2a9d8f; }
+    .yellow { background-color: #f4a261; }
+
+    #result {
+      display: none;
+      text-align: left;
+      font-size: 1.1em;
+      margin-top: 15px;
+      background: #ffffff33;
+      padding: 10px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="question-title"></h1>
+  <div class="question-box">
+    <div class="options" id="options"></div>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        q: 'What does the word "investigate" mean?',
+        options: ["Ignore", "Examine carefully", "Find a solution", "Speak about"],
+        answer: "Examine carefully",
+        chinese: '"investigate" 意味着仔细检查。',
+        explanation: 'To "investigate" means to look into something thoroughly to understand it. It doesn’t mean solving it (C) or talking about it (D), and definitely not ignoring it (A).'
+      },
+      {
+        q: 'What does "analyze" mean in the context of an exam question?',
+        options: ["Read quickly", "Break down in detail", "Skip the details", "Memorize answer"],
+        answer: "Break down in detail",
+        chinese: '"analyze" 意味着详细分解。',
+        explanation: '"Analyze" means to examine something part by part. It’s more than just reading quickly (A) or memorizing (D). You’re supposed to think critically.'
+      },
+      {
+        q: 'What is the meaning of "evaluate" in the context of a test or exam?',
+        options: ["Guess", "Assess quality", "Skip the question", "Focus on memorization"],
+        answer: "Assess quality",
+        chinese: '"evaluate" 意味着评估质量。',
+        explanation: '"Evaluate" means to judge or assess something based on evidence. It\'s not guessing (A) or memorizing (D), but forming a reasoned judgment.'
+      },
+      {
+        q: 'What does the word "synthesize" mean when used in an exam context?',
+        options: ["Copy work", "Combine ideas", "Take a break", "Memorize facts"],
+        answer: "Combine ideas",
+        chinese: '"synthesize" 意味着结合不同的想法。',
+        explanation: 'To "synthesize" means to bring multiple ideas together to form something new. It’s not just copying (A) or memorizing (D); it requires critical thinking.'
+      },
+      {
+        q: 'When an exam question asks you to "describe," what is expected of you?',
+        options: ["Provide definition", "Explain in detail", "Guess the meaning", "Focus on a few points"],
+        answer: "Explain in detail",
+        chinese: '"describe" 意味着详细解释。',
+        explanation: '"Describe" means to give detailed characteristics. It’s more than just giving a short definition (A) or a partial answer (D).'
+      },
+      {
+        q: 'What does "contrast" mean when used in an exam question?',
+        options: ["Ignore differences", "Highlight differences", "Focus on one idea", "Compare similarities"],
+        answer: "Highlight differences",
+        chinese: '"contrast" 意味着强调差异。',
+        explanation: 'To "contrast" means to show how things are different, not similar (D). It’s often used with "compare" (similarities and differences).'
+      },
+      {
+        q: 'If an exam question asks you to "summarize," what should you do?',
+        options: ["Provide long explanation", "Short version of main points", "Skip the points", "Write opinion"],
+        answer: "Short version of main points",
+        chinese: '"summarize" 意味着简短概述要点。',
+        explanation: '"Summarize" means to present only the key ideas in a short form. It’s not about personal opinions (D) or detailed explanations (A).'
+      },
+      {
+        q: 'What does the word "justify" mean in the context of answering an exam question?',
+        options: ["Leave unanswered", "Explain reason", "Copy from textbook", "Vague response"],
+        answer: "Explain reason",
+        chinese: '"justify" 意味着解释原因。',
+        explanation: 'To "justify" is to explain why your answer or opinion makes sense. It’s not just giving the answer, but supporting it.'
+      },
+      {
+        q: 'What does it mean to "argue" in an exam setting?',
+        options: ["Present both sides", "Fight with someone", "Write a statement", "Stay neutral"],
+        answer: "Present both sides",
+        chinese: '"argue" 意味着呈现双方观点。',
+        explanation: '"Argue" in academic writing means to present a case with reasons and evidence—often addressing counterpoints too. It’s not about fighting (B).'
+      },
+      {
+        q: 'What is expected when you are asked to "discuss" in an exam?',
+        options: ["Provide opinion", "Explain from different views", "List facts", "Share a story"],
+        answer: "Explain from different views",
+        chinese: '"discuss" 意味着从不同视角解释。',
+        explanation: '"Discuss" means to explore a topic by looking at different viewpoints, not just listing facts (C) or giving one-sided opinions (A).'
+      }
+    ];
+
+    let current = 0;
+    const colors = ["red", "blue", "green", "yellow"];
+
+    function loadQuestion() {
+      const q = questions[current];
+      document.getElementById("question-title").textContent = q.q;
+
+      const optionsHTML = q.options.map((opt, i) =>
+        `<button class="option-btn ${colors[i % 4]}" onclick="checkAnswer('${opt}')">${String.fromCharCode(65 + i)}) ${opt}</button>`
+      ).join("");
+
+      document.getElementById("options").innerHTML = optionsHTML;
+      document.getElementById("result").textContent = "";
+      document.getElementById("result").style.display = "none";
+    }
+
+    function checkAnswer(selected) {
+      const q = questions[current];
+      const isCorrect = selected === q.answer;
+
+      // Send result to Flask to trigger Arduino response
+      fetch("http://localhost:5000/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ answer: selected, correct: q.answer })
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("result").style.display = 'block';
+        document.getElementById("result").innerHTML = `
+          ✅ Correct answer: ${q.answer}<br><br>
+          📘 中文: ${q.chinese}<br><br>
+          🧠 Explanation: ${q.explanation}<br><br>
+          ${data.result}
+        `;
+      });
+
+      current++;
+      if (current < questions.length) {
+        setTimeout(loadQuestion, 6000);
+      } else {
+        setTimeout(() => {
+          document.getElementById("question-title").textContent = "Quiz Complete!";
+          document.getElementById("options").innerHTML = "";
+          document.getElementById("result").textContent = "";
+          document.getElementById("result").style.display = "none";
+        }, 6000);
+      }
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>

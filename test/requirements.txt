@@ -1,0 +1,4 @@
+pyserial
+keyboard
+flask
+flask_cors
