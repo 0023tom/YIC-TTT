@@ -1,4 +1,4 @@
-# 🧠 Ollama + DeepSeek + Flask API
+# 🧠 Ollama + DeepSeek + Arduino + Flask API
 
 This project sets up a simple Flask-based API that connects with the `deepseek-r1:1.5b` model running locally via [Ollama](https://ollama.com/). It lets you interact with the model using standard HTTP requests.
 
@@ -11,6 +11,8 @@ Make sure the following are installed on your system:
 - Python 3.8 or higher
 - Git (optional, to clone this repo)
 - Ollama (for running large language models locally)
+- Arduino IDE
+- Visual Studio Code IDE
 - Internet connection (for downloading models and packages)
 
 ---
