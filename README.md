@@ -49,6 +49,7 @@ curl -fsSL https://ollama.com/install.sh | sh
 ```
 
 **Windows:**
+
 Download the installer from https://ollama.com/download and follow the setup instructions.
 
 ### 3. 🚀 Start the Ollama Service
